@@ -3,8 +3,8 @@ export type RejectFunction<T> = (reason?: any) => void
 export type Executor<T> = (resolve: ResolveFunction<T>, reject: RejectFunction<T>) => void
 
 export class TimeoutError extends Error {
-  constructor() {
-    super('Timeout error on Promise')
+  constructor(ms: number) {
+    super(`Timeout error: max timeout was ${ms}`)
   }
 }
 
@@ -38,7 +38,7 @@ export class Waiter<T> {
     })
 
     this.promise.catch(err => {
-      console.log('Waiter promise error', err)
+      console.log('[Waiter] Promise error', err)
     })
   }
 
@@ -71,7 +71,8 @@ export class TimedWaiter<T> extends Waiter<T> {
     this.then(clear, clear)
 
     timer = setTimeout(() => {
-      this.reject(new TimeoutError())
+      this.reject(new TimeoutError(ms))
+      clear()
     }, ms)
   }
 }
