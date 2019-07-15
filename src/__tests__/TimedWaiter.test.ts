@@ -1,5 +1,5 @@
+import moment from 'moment'
 import { TimedWaiter, TimeoutError } from '..'
-import moment = require('moment')
 
 test('Simple resolve test', async () => {
   const waiter: TimedWaiter<number> = new TimedWaiter(1000)
