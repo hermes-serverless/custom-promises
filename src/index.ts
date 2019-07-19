@@ -8,7 +8,19 @@ export class TimeoutError extends Error {
   }
 }
 
+type LoggingFunction = (err: any) => void
+
 export class Waiter<T> {
+  private static loggingFn: LoggingFunction
+
+  public static turnOnErrorLog = (loggingFn: LoggingFunction) => {
+    Waiter.loggingFn = loggingFn
+  }
+
+  public static turnOffErrorLog = () => {
+    Waiter.loggingFn = null
+  }
+
   public promise: Promise<T>
   public resolve: ResolveFunction<T>
   public reject: RejectFunction<T>
@@ -38,7 +50,7 @@ export class Waiter<T> {
     })
 
     this.promise.catch(err => {
-      console.log('[Waiter] Promise error', err)
+      if (Waiter.loggingFn) Waiter.loggingFn(err)
     })
   }
 

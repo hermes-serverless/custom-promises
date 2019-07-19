@@ -13,6 +13,23 @@ test('Simple rejection', async () => {
   await expect(waiter.finish()).rejects.toThrow(error)
 })
 
+test('Logger', async () => {
+  const error = new Error('Simple error')
+  const waiter1 = new Waiter()
+  const fn = jest.fn()
+  Waiter.turnOnErrorLog(fn)
+  setTimeout(() => waiter1.reject(error), 20)
+  await expect(waiter1.finish()).rejects.toThrow(error)
+  expect(fn).toBeCalledTimes(1)
+
+  Waiter.turnOffErrorLog()
+
+  const waiter2 = new Waiter()
+  setTimeout(() => waiter2.reject(error), 20)
+  await expect(waiter2.finish()).rejects.toThrow(error)
+  expect(fn).toBeCalledTimes(1)
+})
+
 describe('Using .then', () => {
   test('Then on resolve', async () => {
     const resolved = jest.fn()
