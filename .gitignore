@@ -1,2 +1,4 @@
+coverage
+.coveralls.yml
 build
 node_modules
